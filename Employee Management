@@ -1,0 +1,81 @@
+//write your code here..
+#include <stdio.h>
+#include <stdlib.h>
+#include <string.h>
+
+// Define the Employee structure
+typedef struct {
+    int id;
+    char name[50];
+    char department[50];
+    float salary;
+} Employee;
+
+// Define the Node structure for linked list
+typedef struct Node {
+    Employee data;
+    struct Node* next;
+} Node;
+
+// Function to create a new node
+Node* createNode(Employee emp) {
+    Node* newNode = (Node*)malloc(sizeof(Node));
+    if (newNode != NULL) {
+        newNode->data = emp;
+        newNode->next = NULL;
+    }
+    return newNode;
+}
+
+// Function to add an employee to the linked list
+void addEmployee(Node** head, Employee emp) {
+    Node* newNode = createNode(emp);
+    if (*head == NULL) {
+        *head = newNode;
+    } else {
+        Node* temp = *head;
+        while (temp->next != NULL) {
+            temp = temp->next;
+        }
+        temp->next = newNode;
+    }
+}
+
+// Function to display all employees in the linked list
+void displayEmployees(Node* head) {
+    Node* current = head;
+    while (current != NULL) {
+        printf("ID: %d, Name: %s, Department: %s, Salary: %.2f\n",
+               current->data.id, current->data.name,
+               current->data.department, current->data.salary);
+        current = current->next;
+    }
+}
+
+int main() {
+    Node* employeeList = NULL;
+
+    // Adding some sample employees
+    Employee emp1 = {1, "John Doe", "HR", 50000};
+    Employee emp2 = {2, "Jane Smith", "IT", 60000};
+    Employee emp3 = {3, "Mike Johnson", "Finance", 55000};
+
+    addEmployee(&employeeList, emp1);
+    addEmployee(&employeeList, emp2);
+    addEmployee(&employeeList, emp3);
+
+    // Display all employees
+    printf("Employee List:\n");
+    displayEmployees(employeeList);
+
+    // Free memory allocated for the linked list
+    Node* current = employeeList;
+    Node* next;
+    while (current != NULL) {
+        next = current->next;
+        free(current);
+        current = next;
+    }
+
+    return 0;
+}
