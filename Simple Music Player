@@ -1,0 +1,67 @@
+import os
+import platform
+import subprocess
+
+def clear_screen():
+    # Function to clear the terminal screen
+    if platform.system() == 'Windows':
+        os.system('cls')
+    else:
+        os.system('clear')
+
+def list_songs():
+    # Function to list all songs in the current directory
+    songs = [file for file in os.listdir() if file.endswith(".mp3")]
+    return songs
+
+def play_song(song):
+    # Function to play a specific song
+    clear_screen()
+    print(f"Now playing: {song}")
+    try:
+        subprocess.Popen(["xdg-open", song]) if platform.system() == 'Linux' else subprocess.Popen(["start", "", song], shell=True)
+    except Exception as e:
+        print(f"Error while playing: {e}")
+
+def main():
+    songs = list_songs()
+    
+    if not songs:
+        print("No songs found in the current directory.")
+        return
+    
+    print("Welcome to the Simple Python Music Player!")
+    
+    while True:
+        print("\nAvailable commands:")
+        print("1. list - List all songs")
+        print("2. play <song_number> - Play a song by its number")
+        print("3. exit - Exit the music player")
+        
+        command = input("\nEnter a command: ").strip().lower()
+        
+        if command == "list":
+            print("\nAvailable songs:")
+            for i, song in enumerate(songs, start=1):
+                print(f"{i}. {song}")
+        
+        elif command.startswith("play"):
+            try:
+                _, song_number = command.split()
+                song_number = int(song_number)
+                if 1 <= song_number <= len(songs):
+                    play_song(songs[song_number - 1])
+                else:
+                    print("Invalid song number. Please enter a valid number.")
+            except ValueError:
+                print("Invalid command. Use 'play <song_number>'.")
+        
+        elif command == "exit":
+            print("Goodbye!")
+            break
+                else:
+            print("Invalid command. Please enter a valid command.")
+
+if __name__ == "__main__":
+    main()
+
